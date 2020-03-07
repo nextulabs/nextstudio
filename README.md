@@ -1,2 +1,2 @@
-# nextstudio
-The data analysis studio, built on the web.
+# NextStudio
+The interactive programming studio, built on the web.
