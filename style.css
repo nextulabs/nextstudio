@@ -1,0 +1,16 @@
+/*
+    NextStudio
+    Copyright (C) Nextulabs. All Rights Reserved.
+    Please see associated licence for more details.
+*/
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    touch-action: none;
+}
+
+#svgMatrix {
+    display: none;
+}
