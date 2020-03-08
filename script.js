@@ -87,9 +87,9 @@ window.addEventListener("load", function() {
                     }
             
                     if (command.message == "graphics_drawRectangle") {
-                        context.fillStyle = parseStyle(command.options.fill);
-                        context.strokeStyle = parseStyle(command.options.stroke);
-                        context.lineWidth = command.options.thickness;
+                        context.fillStyle = parseStyle(command.style.fill);
+                        context.strokeStyle = parseStyle(command.style.stroke);
+                        context.lineWidth = command.style.thickness;
             
                         context.fillRect(command.x, command.y, command.width, command.height);
                         context.strokeRect(command.x, command.y, command.width, command.height);

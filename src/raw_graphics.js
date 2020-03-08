@@ -49,16 +49,16 @@ _raw.graphics.resetRegion = function() {
     });
 };
 
-_raw.graphics.drawRectangle = function(x, y, width, height, options = {}, absolute = false) {
+_raw.graphics.drawRectangle = function(x, y, width, height, style = {}, absolute = false) {
     _raw.graphics.nextFrame.push({
         message: "graphics_drawRectangle",
         x: absolute ? x : _raw.graphics.currentRegion.x + x,
         y: absolute ? y : _raw.graphics.currentRegion.y + y,
         width: width,
         height: height,
-        options: {
-            fill: options.fill || "white",
-            stroke: options.stroke || "transparent"
+        style: {
+            fill: style.fill || "white",
+            stroke: style.stroke || "transparent"
         }
     });
 };

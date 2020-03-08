@@ -18,7 +18,7 @@ ns.shapes.Rectangle = class extends ns.shapes.Shape {
         this.visible = true;
         this.tangible = true;
 
-        this.options = {
+        this.style = {
             fill: "red",
             stroke: "white",
             thickness: 1
@@ -27,7 +27,7 @@ ns.shapes.Rectangle = class extends ns.shapes.Shape {
 
     render() {
         if (this.visible) {
-            _raw.graphics.drawRectangle(this.x, this.y, this.width, this.height, this.options);
+            _raw.graphics.drawRectangle(this.x, this.y, this.width, this.height, this.style);
 
             super.render();
         }

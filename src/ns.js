@@ -26,6 +26,14 @@ ns.Thing = class {
         this.mouseHandleY = null;
     }
 
+    child(childName) {
+        for (var i = 0; i < this.children.length; i++) {
+            if (this.children[i].name == childName) {
+                return this.children[i];
+            }
+        }
+    }
+
     getAbsolutePosition() {
         var currentThing = this;
         var x = 0;
@@ -56,7 +64,13 @@ ns.Thing = class {
         }
 
         // Lastly, detect to see if it's us who is the thing at the position
-        if (x >= this.getAbsolutePosition().x && y >= this.getAbsolutePosition().y && x < this.getAbsolutePosition().x + this.width && y < this.getAbsolutePosition().y + this.height) {
+        if (
+            x >= this.getAbsolutePosition().x && y >= this.getAbsolutePosition().y && x < this.getAbsolutePosition().x + this.width && y < this.getAbsolutePosition().y + this.height &&
+            (
+                this.parent == null ||
+                (x >= this.parent.getAbsolutePosition().x && y >= this.parent.getAbsolutePosition().y && x < this.parent.getAbsolutePosition().x + this.parent.width && y < this.parent.getAbsolutePosition().y + this.parent.height)
+            )
+        ) {
             return this;
         }
     }
@@ -118,6 +132,8 @@ ns.Thing = class {
     onChildClick(relativeX, relativeY) {}
 
     prerender() {
+        // TODO: Detect if child is inside parent and is not overflowing before interaction begins
+
         if (this.tangible && (mouse.focussedObject == null || mouse.focussedObject == this)) {
             if (this.mouseDown && this.draggable) {
                 this.x = mouse.x - this.parent.getAbsolutePosition().x - this.mouseHandleX;
