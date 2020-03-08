@@ -97,7 +97,7 @@ onmessage = function(event) {
 
     if (event.data.message == "render") {
         _raw.graphics.resetRegion();
-        _raw.graphics.drawRectangle(0, 0, _raw.graphics.screenSize.width, _raw.graphics.screenSize.height, {fill: "black"});
+        _raw.graphics.drawRectangle(0, 0, _raw.graphics.screenSize.width, _raw.graphics.screenSize.height, 0, {fill: "black"});
 
         world.prerender();
         world.render();

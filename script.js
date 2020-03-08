@@ -91,6 +91,10 @@ window.addEventListener("load", function() {
                         context.strokeStyle = parseStyle(command.style.stroke);
                         context.lineWidth = command.style.thickness;
 
+                        context.translate(command.x + (command.width / 2), command.y + command.height / 2);
+                        context.rotate(command.rotation * (Math.PI / 180));
+                        context.translate(-command.x - (command.width / 2), -command.y - (command.height / 2));
+
                         context.beginPath();
                         context.moveTo(command.x + command.style.roundedCorners.topLeft, command.y);
                         context.lineTo(command.x + command.width - command.style.roundedCorners.topRight, command.y);

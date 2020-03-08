@@ -40,7 +40,7 @@ ns.shapes.Rectangle = class extends ns.shapes.Shape {
 
     render() {
         if (this.visible) {
-            _raw.graphics.drawRectangle(this.x, this.y, this.width, this.height, this.style);
+            _raw.graphics.drawRectangle(this.x, this.y, this.width, this.height, this.rotation, this.style);
 
             super.render();
         }

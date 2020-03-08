@@ -18,6 +18,7 @@ ns.Thing = class {
         this.y = 0;
         this.width = 0;
         this.height = 0;
+        this.rotation = 0;
         this.visible = false;
         this.tangible = false;
         this.draggable = true;
