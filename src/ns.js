@@ -34,6 +34,18 @@ ns.Thing = class {
         }
     }
 
+    delete() {
+        if (this.parent != null) {
+            if (mouse.focussedObject == this) {
+                mouse.focussedObject = world;
+            }
+
+            this.parent.children.splice(this.parent.children.indexOf(this), 1);
+        } else {
+            throw new ReferenceError("Cannot delete thing with no parent");
+        }
+    }
+
     getAbsolutePosition() {
         var currentThing = this;
         var x = 0;
@@ -132,8 +144,6 @@ ns.Thing = class {
     onChildClick(relativeX, relativeY) {}
 
     prerender() {
-        // TODO: Detect if child is inside parent and is not overflowing before interaction begins
-
         if (this.tangible && (mouse.focussedObject == null || mouse.focussedObject == this)) {
             if (this.mouseDown && this.draggable) {
                 this.x = mouse.x - this.parent.getAbsolutePosition().x - this.mouseHandleX;

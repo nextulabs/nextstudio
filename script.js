@@ -90,9 +90,21 @@ window.addEventListener("load", function() {
                         context.fillStyle = parseStyle(command.style.fill);
                         context.strokeStyle = parseStyle(command.style.stroke);
                         context.lineWidth = command.style.thickness;
-            
-                        context.fillRect(command.x, command.y, command.width, command.height);
-                        context.strokeRect(command.x, command.y, command.width, command.height);
+
+                        context.beginPath();
+                        context.moveTo(command.x + command.style.roundedCorners.topLeft, command.y);
+                        context.lineTo(command.x + command.width - command.style.roundedCorners.topRight, command.y);
+                        context.quadraticCurveTo(command.x + command.width, command.y, command.x + command.width, command.y + command.style.roundedCorners.topRight);
+                        context.lineTo(command.x + command.width, command.y + command.height - command.style.roundedCorners.bottomRight);
+                        context.quadraticCurveTo(command.x + command.width, command.y + command.height, command.x + command.width - command.style.roundedCorners.bottomRight, command.y + command.height);
+                        context.lineTo(command.x + command.style.roundedCorners.bottomLeft, command.y + command.height);
+                        context.quadraticCurveTo(command.x, command.y + command.height, command.x, command.y + command.height - command.style.roundedCorners.bottomLeft);
+                        context.lineTo(command.x, command.y + command.style.roundedCorners.topLeft);
+                        context.quadraticCurveTo(command.x, command.y, command.x + command.style.roundedCorners.topLeft, command.y);
+                        context.closePath();
+
+                        context.fill();
+                        context.stroke();
                     }
                 }
             });

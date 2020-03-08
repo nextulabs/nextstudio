@@ -8,7 +8,20 @@
 
 ns.shapes = {};
 
-ns.shapes.Shape = class extends ns.Thing {};
+ns.shapes.Shape = class extends ns.Thing {
+    constructor(parent, children = []) {
+        super(parent, children);
+
+        this.name = "Shape";
+        this.visible = true;
+        this.tangible = true;
+
+        this.style = {};
+        this.style.fill = "red";
+        this.style.stroke = "white";
+        this.style.thickness = 1;
+    }
+};
 
 ns.shapes.Rectangle = class extends ns.shapes.Shape {
     constructor(parent, children = []) {
@@ -18,11 +31,11 @@ ns.shapes.Rectangle = class extends ns.shapes.Shape {
         this.visible = true;
         this.tangible = true;
 
-        this.style = {
-            fill: "red",
-            stroke: "white",
-            thickness: 1
-        };
+        this.style.roundedCorners = {};
+        this.style.roundedCorners.topLeft = 0;
+        this.style.roundedCorners.topRight = 0;
+        this.style.roundedCorners.bottomLeft = 0;
+        this.style.roundedCorners.bottomRight = 0;
     }
 
     render() {

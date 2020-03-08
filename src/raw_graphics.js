@@ -58,7 +58,13 @@ _raw.graphics.drawRectangle = function(x, y, width, height, style = {}, absolute
         height: height,
         style: {
             fill: style.fill || "white",
-            stroke: style.stroke || "transparent"
+            stroke: style.stroke || "transparent",
+            roundedCorners: {
+                topLeft: (style.roundedCorners || {}).topLeft || 0,
+                topRight: (style.roundedCorners || {}).topRight || 0,
+                bottomLeft: (style.roundedCorners || {}).bottomLeft || 0,
+                bottomRight: (style.roundedCorners || {}).bottomRight || 0
+            }
         }
     });
 };

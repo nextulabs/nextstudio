@@ -51,7 +51,15 @@ for (var i = 0; i < 5; i++) {
         card.width = 50;
         card.height = 50;
         card.style.fill = "#" + i + i + i + i + i + i;
+        card.style.roundedCorners.topLeft = i * 5;
+        card.style.roundedCorners.topRight = i * 5;
+        card.style.roundedCorners.bottomLeft = i * 5;
+        card.style.roundedCorners.bottomRight = i * 5;
         card.draggable = true;
+
+        card.onClick = function() {
+            card.delete();
+        };
     
         card.onChildClick = function() {
             world.bringChildToFront(card);
