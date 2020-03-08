@@ -207,12 +207,11 @@ ns.Thing = class {
         var thisScope = this;
 
         if (this.visible) {
-            _raw.graphics.setRegion(thisScope.x, thisScope.y, thisScope.width, thisScope.height);
             this.children.forEach(function(child) {
+                _raw.graphics.setRegion(thisScope.x, thisScope.y, thisScope.width, thisScope.height, thisScope.rotation);
                 child.render();
+                _raw.graphics.resetRegion();
             });
-            
-            _raw.graphics.resetRegion();
         }
     }
 };

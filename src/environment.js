@@ -56,10 +56,6 @@ for (var i = 0; i < 5; i++) {
         card.style.roundedCorners.bottomLeft = i * 5;
         card.style.roundedCorners.bottomRight = i * 5;
         card.draggable = true;
-
-        card.onClick = function() {
-            card.delete();
-        };
     
         card.onChildClick = function() {
             world.bringChildToFront(card);

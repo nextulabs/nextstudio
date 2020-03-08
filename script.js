@@ -75,10 +75,18 @@ window.addEventListener("load", function() {
                     if (command.message == "graphics_setRegion") {
                         context.fillStyle = "transparent";
                         context.strokeStyle = "transparent";
+
+                        context.translate(command.x + (command.width / 2), command.y + command.height / 2);
+                        context.rotate(command.rotation * (Math.PI / 180));
+                        context.translate(-command.x - (command.width / 2), -command.y - (command.height / 2));
                         
                         context.beginPath();
                         context.rect(command.x, command.y, command.width, command.height);
                         context.clip();
+
+                        context.translate(command.x + (command.width / 2), command.y + command.height / 2);
+                        context.rotate(-command.rotation * (Math.PI / 180));
+                        context.translate(-command.x - (command.width / 2), -command.y - (command.height / 2));
                     }
             
                     if (command.message == "graphics_resetRegion") {
@@ -109,6 +117,10 @@ window.addEventListener("load", function() {
 
                         context.fill();
                         context.stroke();
+
+                        context.translate(command.x + (command.width / 2), command.y + command.height / 2);
+                        context.rotate(-command.rotation * (Math.PI / 180));
+                        context.translate(-command.x - (command.width / 2), -command.y - (command.height / 2));
                     }
                 }
             });

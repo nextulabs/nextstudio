@@ -19,15 +19,17 @@ _raw.graphics.currentRegion = {
     x: 0,
     y: 0,
     width: 0,
-    height: 0
+    height: 0,
+    rotation: 0
 };
 
-_raw.graphics.setRegion = function(x, y, width, height, absolute = false) {
+_raw.graphics.setRegion = function(x, y, width, height, rotation, absolute = false) {
     _raw.graphics.currentRegion = {
         x: absolute ? x : _raw.graphics.currentRegion.x + x,
         y: absolute ? y : _raw.graphics.currentRegion.y + y,
         width: width,
-        height: height
+        height: height,
+        rotation: absolute ? rotation : _raw.graphics.currentRegion.rotation + rotation
     };
 
     _raw.graphics.nextFrame.push({
@@ -41,7 +43,8 @@ _raw.graphics.resetRegion = function() {
         x: 0,
         y: 0,
         width: _raw.graphics.screenSize.width,
-        height: _raw.graphics.screenSize.height
+        height: _raw.graphics.screenSize.height,
+        rotation: 0
     };
 
     _raw.graphics.nextFrame.push({
@@ -56,7 +59,7 @@ _raw.graphics.drawRectangle = function(x, y, width, height, rotation, style = {}
         y: absolute ? y : _raw.graphics.currentRegion.y + y,
         width: width,
         height: height,
-        rotation: rotation,
+        rotation: absolute ? rotation : _raw.graphics.currentRegion.rotation + rotation,
         style: {
             fill: style.fill || "white",
             stroke: style.stroke || "transparent",
