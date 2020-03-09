@@ -42,7 +42,7 @@ background.prerender = function() {
 world.children.push(background);
 
 for (var i = 0; i < 5; i++) {
-    var card = new ns.shapes.Rectangle(world);
+    var card = new ns.shapes.Rectangle(background);
 
     (function(card) {
         card.name = "Card";
@@ -58,10 +58,10 @@ for (var i = 0; i < 5; i++) {
         card.draggable = true;
     
         card.onChildClick = function() {
-            world.bringChildToFront(card);
+            background.bringChildToFront(card);
         };
     
-        world.children.push(card);
+        background.children.push(card);
 
         var minicard = new ns.shapes.Rectangle(card);
 
