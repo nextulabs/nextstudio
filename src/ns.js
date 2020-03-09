@@ -146,7 +146,7 @@ ns.Thing = class {
 
     prerender() {
         if (this.tangible && (mouse.focussedObject == null || mouse.focussedObject == this)) {
-            if (this.mouseDown && this.draggable) {
+            if (this != world && this.mouseDown && this.draggable) {
                 this.x = mouse.x - this.parent.getAbsolutePosition().x - this.mouseHandleX;
                 this.y = mouse.y - this.parent.getAbsolutePosition().y - this.mouseHandleY;
             } else if (world.getThingAtPosition(mouse.x, mouse.y) == this) {
