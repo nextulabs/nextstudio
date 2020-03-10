@@ -47,23 +47,48 @@ ns.Thing = class {
         }
     }
 
-    getAbsolutePosition() {
+    getAbsolutePosition(useRotation = true) {
+        var familyTree = [];
         var currentThing = this;
-        var x = 0;
-        var y = 0;
 
         while (true) {
-            x += currentThing.x;
-            y += currentThing.y;
-
+            familyTree.unshift(currentThing);
             currentThing = currentThing.parent;
-
+            
             if (currentThing == null) {
                 break;
             }
         }
 
-        return {x: x, y: y};
+        var currentRegion = {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0, 
+            rotation: 0
+        };
+
+        for (var i = 0; i < familyTree.length; i++) {
+            var rotatedPoint = _raw.graphics.rotateAroundPoint(
+                currentRegion.x + familyTree[i].x,
+                currentRegion.y + familyTree[i].y,
+                currentRegion.x + (currentRegion.width / 2),
+                currentRegion.y + (currentRegion.height / 2),
+                useRotation ? currentRegion.rotation : 0
+            );
+
+            currentRegion = {
+                x: rotatedPoint.x,
+                y: rotatedPoint.y,
+                width: familyTree[i].width,
+                height: familyTree[i].height,
+                rotation: currentRegion.rotation + familyTree[i].rotation
+            };
+
+            if (i == familyTree.length - 1) {
+                return {x: currentRegion.x, y: currentRegion.y, rotation: currentRegion.rotation};
+            }
+        }
     }
 
     getThingAtPosition(x, y) {
@@ -145,13 +170,45 @@ ns.Thing = class {
     onChildClick(relativeX, relativeY) {}
 
     prerender() {
+        var parentMouseRotatedPoint = {};
+
+        if (this.parent != null) {
+            parentMouseRotatedPoint = _raw.graphics.rotateAroundPoint(
+                mouse.x - this.parent.getAbsolutePosition().x,
+                mouse.y - this.parent.getAbsolutePosition().y,
+                this.parent.width / 2,
+                this.parent.height / 2,
+                -this.parent.getAbsolutePosition().rotation
+            );
+
+            parentMouseRotatedPoint = {
+                x: this.parent.getAbsolutePosition().x + parentMouseRotatedPoint.x,
+                y: this.parent.getAbsolutePosition().y + parentMouseRotatedPoint.y
+            };
+        } else {
+            mouseRotatedPoint = {x: 0, y: 0};
+        }
+
+        var mouseRotatedPoint = _raw.graphics.rotateAroundPoint(
+            mouse.x - this.getAbsolutePosition().x,
+            mouse.y - this.getAbsolutePosition().y,
+            this.width / 2,
+            this.height / 2,
+            -this.getAbsolutePosition().rotation
+        );
+
+        mouseRotatedPoint = {
+            x: this.getAbsolutePosition().x + mouseRotatedPoint.x,
+            y: this.getAbsolutePosition().y + mouseRotatedPoint.y
+        };
+
         if (this.tangible && (mouse.focussedObject == null || mouse.focussedObject == this)) {
             if (this != world && this.mouseDown && this.draggable) {
-                this.x = mouse.x - this.parent.getAbsolutePosition().x - this.mouseHandleX;
-                this.y = mouse.y - this.parent.getAbsolutePosition().y - this.mouseHandleY;
+                this.x = parentMouseRotatedPoint.x - this.parent.getAbsolutePosition().x - this.mouseHandleX;
+                this.y = parentMouseRotatedPoint.y - this.parent.getAbsolutePosition().y - this.mouseHandleY;
             } else if (world.getThingAtPosition(mouse.x, mouse.y) == this) {
-                this.mouseHandleX = mouse.x - this.getAbsolutePosition().x;
-                this.mouseHandleY = mouse.y - this.getAbsolutePosition().y;
+                this.mouseHandleX = mouseRotatedPoint.x - this.getAbsolutePosition().x;
+                this.mouseHandleY = mouseRotatedPoint.y - this.getAbsolutePosition().y;
 
                 this.onHover(this.mouseHandleX, this.mouseHandleY);
 
@@ -166,14 +223,14 @@ ns.Thing = class {
                         this.mouseDown = true;
                     }
                 }
-            } else if (this != world && world.getThingAtPosition(mouse.x, mouse.y).hasParent(this)) {
-                this.mouseHandleX = mouse.x - this.getAbsolutePosition().x;
-                this.mouseHandleY = mouse.y - this.getAbsolutePosition().y;
+            } else if (this != world && world.getThingAtPosition(mouseRotatedPoint.x, mouseRotatedPoint.y) != null && world.getThingAtPosition(mouseRotatedPoint.x, mouseRotatedPoint.y).hasParent(this)) {
+                this.mouseHandleX = mouseRotatedPoint.x - this.getAbsolutePosition().x;
+                this.mouseHandleY = mouseRotatedPoint.y - this.getAbsolutePosition().y;
 
                 this.onChildHover(this.mouseHandleX, this.mouseHandleY);
 
                 if (mouse.button != null) {
-                    if (world.getThingAtPosition(mouse.x, mouse.y).draggable == false) {
+                    if (world.getThingAtPosition(mouseRotatedPoint.x, mouseRotatedPoint.y).draggable == false) {
                         mouse.focussedObject = this;
                     }
 

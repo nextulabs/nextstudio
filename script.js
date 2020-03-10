@@ -99,7 +99,7 @@ window.addEventListener("load", function() {
                         context.strokeStyle = parseStyle(command.style.stroke);
                         context.lineWidth = command.style.thickness;
 
-                        context.translate(command.x + (command.width / 2), command.y + command.height / 2);
+                        context.translate(command.x + (command.width / 2), command.y + (command.height / 2));
                         context.rotate(command.rotation * (Math.PI / 180));
                         context.translate(-command.x - (command.width / 2), -command.y - (command.height / 2));
 
@@ -118,7 +118,7 @@ window.addEventListener("load", function() {
                         context.fill();
                         context.stroke();
 
-                        context.translate(command.x + (command.width / 2), command.y + command.height / 2);
+                        context.translate(command.x + (command.width / 2), command.y + (command.height / 2));
                         context.rotate(-command.rotation * (Math.PI / 180));
                         context.translate(-command.x - (command.width / 2), -command.y - (command.height / 2));
                     }

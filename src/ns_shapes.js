@@ -19,7 +19,7 @@ ns.shapes.Shape = class extends ns.Thing {
         this.style = {};
         this.style.fill = "red";
         this.style.stroke = "white";
-        this.style.thickness = 1;
+        this.style.thickness = 0;
     }
 };
 

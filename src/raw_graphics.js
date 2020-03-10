@@ -23,10 +23,30 @@ _raw.graphics.currentRegion = {
     rotation: 0
 };
 
+_raw.graphics.rotateAroundPoint = function(x, y, cx, cy, rotation) {
+    var radians = -rotation * (Math.PI / 180);
+    var cos = Math.cos(radians);
+    var sin = Math.sin(radians);
+
+    return {x: (cos * (x - cx)) + (sin * (y - cy)) + cx, y: (cos * (y - cy)) - (sin * (x - cx)) + cy};
+    // return {
+    //     x: (cos * (x - cx)) - (sin * (y - cy)) + cx,
+    //     y: (sin * (x - cx)) + (cos * (y - cy)) + cy
+    // };
+};
+
 _raw.graphics.setRegion = function(x, y, width, height, rotation, absolute = false) {
+    var rotatedPoint = _raw.graphics.rotateAroundPoint(
+        _raw.graphics.currentRegion.x + x,
+        _raw.graphics.currentRegion.y + y,
+        _raw.graphics.currentRegion.x + (_raw.graphics.currentRegion.width / 2),
+        _raw.graphics.currentRegion.y + (_raw.graphics.currentRegion.height / 2),
+        _raw.graphics.currentRegion.rotation
+    );
+
     _raw.graphics.currentRegion = {
-        x: absolute ? x : _raw.graphics.currentRegion.x + x,
-        y: absolute ? y : _raw.graphics.currentRegion.y + y,
+        x: absolute ? x : rotatedPoint.x,
+        y: absolute ? y : rotatedPoint.y,
         width: width,
         height: height,
         rotation: absolute ? rotation : _raw.graphics.currentRegion.rotation + rotation
@@ -53,16 +73,25 @@ _raw.graphics.resetRegion = function() {
 };
 
 _raw.graphics.drawRectangle = function(x, y, width, height, rotation, style = {}, absolute = false) {
+    var rotatedPoint = _raw.graphics.rotateAroundPoint(
+        _raw.graphics.currentRegion.x + x,
+        _raw.graphics.currentRegion.y + y,
+        _raw.graphics.currentRegion.x + (_raw.graphics.currentRegion.width / 2),
+        _raw.graphics.currentRegion.y + (_raw.graphics.currentRegion.height / 2),
+        _raw.graphics.currentRegion.rotation
+    );
+    
     _raw.graphics.nextFrame.push({
         message: "graphics_drawRectangle",
-        x: absolute ? x : _raw.graphics.currentRegion.x + x,
-        y: absolute ? y : _raw.graphics.currentRegion.y + y,
+        x: absolute ? x : rotatedPoint.x,
+        y: absolute ? y : rotatedPoint.y,
         width: width,
         height: height,
         rotation: absolute ? rotation : _raw.graphics.currentRegion.rotation + rotation,
         style: {
             fill: style.fill || "white",
             stroke: style.stroke || "transparent",
+            thickness: style.thickness || 0,
             roundedCorners: {
                 topLeft: (style.roundedCorners || {}).topLeft || 0,
                 topRight: (style.roundedCorners || {}).topRight || 0,
