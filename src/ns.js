@@ -25,6 +25,7 @@ ns.Thing = class {
         this.mouseDown = false;
         this.mouseHandleX = null;
         this.mouseHandleY = null;
+        this.overflowable = false;
     }
 
     child(childName) {
@@ -105,7 +106,7 @@ ns.Thing = class {
         if (
             x >= this.getAbsolutePosition().x && y >= this.getAbsolutePosition().y && x < this.getAbsolutePosition().x + this.width && y < this.getAbsolutePosition().y + this.height &&
             (
-                this.parent == null ||
+                this.parent == null || this.parent.overflowable ||
                 (x >= this.parent.getAbsolutePosition().x && y >= this.parent.getAbsolutePosition().y && x < this.parent.getAbsolutePosition().x + this.parent.width && y < this.parent.getAbsolutePosition().y + this.parent.height)
             )
         ) {
@@ -265,7 +266,7 @@ ns.Thing = class {
 
         if (this.visible) {
             this.children.forEach(function(child) {
-                _raw.graphics.setRegion(thisScope.x, thisScope.y, thisScope.width, thisScope.height, thisScope.rotation);
+                _raw.graphics.setRegion(thisScope.x, thisScope.y, thisScope.width, thisScope.height, thisScope.rotation, thisScope.overflowable);
                 child.render();
                 _raw.graphics.resetRegion();
             });

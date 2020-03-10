@@ -33,6 +33,7 @@ background.height = world.height;
 background.rotation = 0;
 background.style.fill = "red";
 background.draggable = true;
+background.overflowable = true;
 background.prerender = function() {
     ns.shapes.Rectangle.prototype.prerender.call(this);
 

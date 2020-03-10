@@ -29,13 +29,9 @@ _raw.graphics.rotateAroundPoint = function(x, y, cx, cy, rotation) {
     var sin = Math.sin(radians);
 
     return {x: (cos * (x - cx)) + (sin * (y - cy)) + cx, y: (cos * (y - cy)) - (sin * (x - cx)) + cy};
-    // return {
-    //     x: (cos * (x - cx)) - (sin * (y - cy)) + cx,
-    //     y: (sin * (x - cx)) + (cos * (y - cy)) + cy
-    // };
 };
 
-_raw.graphics.setRegion = function(x, y, width, height, rotation, absolute = false) {
+_raw.graphics.setRegion = function(x, y, width, height, rotation, overflowable = false, absolute = false) {
     var rotatedPoint = _raw.graphics.rotateAroundPoint(
         _raw.graphics.currentRegion.x + x,
         _raw.graphics.currentRegion.y + y,
@@ -52,10 +48,12 @@ _raw.graphics.setRegion = function(x, y, width, height, rotation, absolute = fal
         rotation: absolute ? rotation : _raw.graphics.currentRegion.rotation + rotation
     };
 
-    _raw.graphics.nextFrame.push({
-        message: "graphics_setRegion",
-        ..._raw.graphics.currentRegion
-    });
+    if (!overflowable) {
+        _raw.graphics.nextFrame.push({
+            message: "graphics_setRegion",
+            ..._raw.graphics.currentRegion
+        });
+    }
 };
 
 _raw.graphics.resetRegion = function() {
