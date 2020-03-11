@@ -33,6 +33,7 @@ background.height = world.height;
 background.rotation = 0;
 background.style.fill = "red";
 background.draggable = true;
+background.droppable = false;
 background.overflowable = true;
 background.prerender = function() {
     ns.shapes.Rectangle.prototype.prerender.call(this);
@@ -53,6 +54,7 @@ for (var i = 0; i < 5; i++) {
         card.width = 50;
         card.height = 50;
         card.rotation = 0;
+        card.droppable = false;
         card.style.fill = "#" + i + i + i + i + i + i;
         card.style.roundedCorners.topLeft = i * 5;
         card.style.roundedCorners.topRight = i * 5;

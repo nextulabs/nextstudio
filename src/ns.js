@@ -22,6 +22,7 @@ ns.Thing = class {
         this.visible = false;
         this.tangible = false;
         this.draggable = true;
+        this.droppable = true;
         this.mouseDown = false;
         this.mouseHandleX = null;
         this.mouseHandleY = null;
@@ -45,6 +46,23 @@ ns.Thing = class {
             this.parent.children.splice(this.parent.children.indexOf(this), 1);
         } else {
             throw new ReferenceError("Cannot delete thing with no parent");
+        }
+    }
+
+    setParent(newParent) {
+        if (newParent != null) {
+            if (this.parent != null) {
+                if (mouse.focussedObject == this) {
+                    mouse.focussedObject = world;
+                }
+
+                this.parent.children.splice(this.parent.children.indexOf(this), 1);
+            }
+
+            newParent.children.push(this);
+            this.parent = newParent;
+        } else {
+            throw new ReferenceError("Parent cannot be null");
         }
     }
 
@@ -92,10 +110,10 @@ ns.Thing = class {
         }
     }
 
-    getThingAtPosition(x, y) {
+    getThingAtPosition(x, y, ignores = []) {
         // Go in reverse so that things that are layered in front are found first
         for (var i = this.children.length - 1; i >= 0; i--) {
-            var currentThing = this.children[i].getThingAtPosition(x, y);
+            var currentThing = this.children[i].getThingAtPosition(x, y, ignores);
 
             if (currentThing != null) {
                 return currentThing;
@@ -104,6 +122,7 @@ ns.Thing = class {
 
         // Lastly, detect to see if it's us who is the thing at the position
         if (
+            ignores.indexOf(this) == -1 &&
             x >= this.getAbsolutePosition().x && y >= this.getAbsolutePosition().y && x < this.getAbsolutePosition().x + this.width && y < this.getAbsolutePosition().y + this.height &&
             (
                 this.parent == null || this.parent.overflowable ||
@@ -204,7 +223,10 @@ ns.Thing = class {
         };
 
         if (this.tangible && (mouse.focussedObject == null || mouse.focussedObject == this)) {
-            if (this != world && this.mouseDown && this.draggable) {
+            if (this != world && this.mouseDown && this.draggable && this.droppable) {
+                this.x = mouse.x - this.mouseHandleX;
+                this.y = mouse.y - this.mouseHandleY;
+            } else if (this != world && this.mouseDown && this.draggable) {
                 this.x = parentMouseRotatedPoint.x - this.parent.getAbsolutePosition().x - this.mouseHandleX;
                 this.y = parentMouseRotatedPoint.y - this.parent.getAbsolutePosition().y - this.mouseHandleY;
             } else if (world.getThingAtPosition(mouse.x, mouse.y) == this) {
@@ -214,6 +236,10 @@ ns.Thing = class {
                 this.onHover(this.mouseHandleX, this.mouseHandleY);
 
                 if (mouse.button != null) {
+                    if (this.droppable) {
+                        this.setParent(world);
+                    }
+
                     mouse.focussedObject = this;
 
                     this.onMouseDown(this.mouseHandleX, this.mouseHandleY);
@@ -253,6 +279,13 @@ ns.Thing = class {
 
             if (mouse.focussedObject == this) {
                 mouse.focussedObject = null;
+
+                if (this.droppable) {
+                    this.setParent(world.getThingAtPosition(mouse.x, mouse.y, [this]));
+                    
+                    this.x = this.x - this.parent.getAbsolutePosition().x;
+                    this.y = this.y - this.parent.getAbsolutePosition().y;
+                }
             }
         }
 
