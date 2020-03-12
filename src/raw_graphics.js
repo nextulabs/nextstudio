@@ -70,14 +70,18 @@ _raw.graphics.resetRegion = function() {
     });
 };
 
-_raw.graphics.drawRectangle = function(x, y, width, height, rotation, style = {}, absolute = false) {
-    var rotatedPoint = _raw.graphics.rotateAroundPoint(
+_raw.graphics.offsetRegion = function (x, y) {
+    return _raw.graphics.rotateAroundPoint(
         _raw.graphics.currentRegion.x + x,
         _raw.graphics.currentRegion.y + y,
         _raw.graphics.currentRegion.x + (_raw.graphics.currentRegion.width / 2),
         _raw.graphics.currentRegion.y + (_raw.graphics.currentRegion.height / 2),
         _raw.graphics.currentRegion.rotation
     );
+};
+
+_raw.graphics.drawRectangle = function(x, y, width, height, rotation, style = {}, absolute = false) {
+    var rotatedPoint = _raw.graphics.offsetRegion(x, y);
     
     _raw.graphics.nextFrame.push({
         message: "graphics_drawRectangle",
@@ -87,8 +91,8 @@ _raw.graphics.drawRectangle = function(x, y, width, height, rotation, style = {}
         height: height,
         rotation: absolute ? rotation : _raw.graphics.currentRegion.rotation + rotation,
         style: {
-            fill: style.fill || "white",
-            stroke: style.stroke || "transparent",
+            fill: style.fill || "red",
+            stroke: style.stroke || "white",
             thickness: style.thickness || 0,
             roundedCorners: {
                 topLeft: (style.roundedCorners || {}).topLeft || 0,
@@ -96,6 +100,26 @@ _raw.graphics.drawRectangle = function(x, y, width, height, rotation, style = {}
                 bottomLeft: (style.roundedCorners || {}).bottomLeft || 0,
                 bottomRight: (style.roundedCorners || {}).bottomRight || 0
             }
+        }
+    });
+};
+
+_raw.graphics.drawText = function(text, x, y, width, height, rotation, style = {}, absolute = false) {
+    var rotatedPoint = _raw.graphics.offsetRegion(x, y);
+
+    _raw.graphics.nextFrame.push({
+        message: "graphics_drawText",
+        text: text,
+        x: absolute ? x : rotatedPoint.x,
+        y: absolute ? y : rotatedPoint.y,
+        width: width,
+        height: height,
+        rotation: absolute ? rotation : _raw.graphics.currentRegion.rotation + rotation,
+        style: {
+            fill: style.fill || "black",
+            stroke: style.stroke || "transparent",
+            thickness: style.thickness || 0,
+            font: style.font || "sans-serif"
         }
     });
 };

@@ -122,6 +122,24 @@ window.addEventListener("load", function() {
                         context.rotate(-command.rotation * (Math.PI / 180));
                         context.translate(-command.x - (command.width / 2), -command.y - (command.height / 2));
                     }
+
+                    if (command.message == "graphics_drawText") {
+                        context.fillStyle = parseStyle(command.style.fill);
+                        context.strokeStyle = parseStyle(command.style.stroke);
+                        context.lineWidth = command.style.thickness;
+                        context.font = command.height + "px " + command.style.font;
+
+                        context.translate(command.x + (command.width / 2), command.y + (command.height / 2));
+                        context.rotate(command.rotation * (Math.PI / 180));
+                        context.translate(-command.x - (command.width / 2), -command.y - (command.height / 2));
+
+                        context.fillText(command.text, command.x, command.y + command.height, command.width);
+                        context.strokeText(command.text, command.x, command.y + command.height, command.width);
+
+                        context.translate(command.x + (command.width / 2), command.y + (command.height / 2));
+                        context.rotate(-command.rotation * (Math.PI / 180));
+                        context.translate(-command.x - (command.width / 2), -command.y - (command.height / 2));
+                    }
                 }
             });
         }

@@ -82,6 +82,18 @@ for (var i = 0; i < 5; i++) {
     })(card);
 }
 
+var text = new ns.shapes.Text(background);
+
+text.text = "Hello, world!";
+text.x = 10;
+text.y = 10;
+text.width = 200;
+text.height = 50;
+text.style.stroke = "green";
+text.style.thickness = 1;
+
+background.children.push(text);
+
 // End of demo stuff
 
 onmessage = function(event) {
