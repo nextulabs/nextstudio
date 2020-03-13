@@ -224,6 +224,8 @@ ns.Thing = class {
 
         if (this.tangible && (mouse.focussedObject == null || mouse.focussedObject == this)) {
             if (this != world && this.mouseDown && this.draggable && this.droppable) {
+                // FIXME: Make dropping stick position when ancestors are moved
+
                 this.x = mouse.x - this.mouseHandleX;
                 this.y = mouse.y - this.mouseHandleY;
             } else if (this != world && this.mouseDown && this.draggable) {
